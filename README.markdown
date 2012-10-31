@@ -45,9 +45,11 @@ Be neat to expand this to include cities.
 
 ### Testing
 First, you have to install nodeunit (https://github.com/caolan/nodeunit)
+
    $> npm install nodeunit
 
 Second, run the unit test:
+
    $> ./node_modules/nodeunit/bin/nodeunit test/unit/lookupTest.js
 
 
