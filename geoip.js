@@ -25,57 +25,57 @@ function find(ip) {
    var n = midpoints[0];
    var step;
    var parts = ip.split(".");
-   var ipl = parseInt(parts[3], 10) +
-            (parseInt(parts[2], 10) * 256) +
-            (parseInt(parts[1], 10) * 65536) +
-            (parseInt(parts[0], 10) * 16777216);
+   var target_ip = parseInt(parts[3], 10) +
+                  (parseInt(parts[2], 10) * 256) +
+                  (parseInt(parts[1], 10) * 65536) +
+                  (parseInt(parts[0], 10) * 16777216);
 
-    var current;
-    var next;
-    var prev;
-    var nn;
-    var pn;
-    
-    while(true) {
+  var current;
+  var next;
+  var prev;
+  var nn;
+  var pn;
 
-        mpi++;
-        step = midpoints[mpi];
-        current = countries[n];
-        nn = n + 1;
-        pn = n - 1;
+  while(true) {
 
-        next = nn < numcountries ? countries[nn] : null;
-        prev = pn > -1 ? countries[pn] : null;
-        
-		// take another step?
-        if(step > 0) {
+      mpi++;
+      step = midpoints[mpi];
+      current = countries[n];
+      nn = n + 1;
+      pn = n - 1;
 
-            if(!next || next.ipstart < ipl) {
-                n += step;
-            } else {
-                n -= step;
-            }
+      next = nn < numcountries ? countries[nn] : null;
+      prev = pn > -1 ? countries[pn] : null;
 
-            continue;
-        }
+      // take another step?
+      if(step > 0) {
 
-        // we're either current, next or previous depending on which is closest to ipl
-        var cd = Math.abs(ipl - current.ipstart);
-        var nd = next && next.ipstart < ipl ? ipl - next.ipstart : 1000000000;
-        var pd = prev && prev.ipstart < ipl ? ipl - prev.ipstart : 1000000000;
+          if(!next || next.ipstart < target_ip) {
+              n += step;
+          } else {
+              n -= step;
+          }
 
-        // current wins
-        if(cd < nd && cd < pd) {
-            return current;
-        }
+          continue;
+      }
 
-         // next wins
-        if(nd < cd && nd < pd) {
-            return next;
-        }
+      // we're either current, next or previous depending on which is closest to target_ip
+      var curr_ip_diff = Math.abs(target_ip - current.ipstart);
+      var next_ip_diff = next && next.ipstart < target_ip ? target_ip - next.ipstart : 1000000000;
+      var prev_ip_diff = prev && prev.ipstart < target_ip ? target_ip - prev.ipstart : 1000000000;
 
-        // prev wins
-        return prev;
+      // current wins
+      if(curr_ip_diff < next_ip_diff && curr_ip_diff < prev_ip_diff) {
+          return current;
+      }
+
+      // next wins
+      if(next_ip_diff < curr_ip_diff && next_ip_diff < prev_ip_diff) {
+          return next;
+      }
+
+      // prev wins
+      return prev;
     }
 }
 
