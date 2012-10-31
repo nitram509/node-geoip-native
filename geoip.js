@@ -62,7 +62,7 @@ function find(ip) {
       // we're either current, next or previous depending on which is closest to target_ip
       var curr_ip_diff = Math.abs(target_ip - current.ipstart);
       var next_ip_diff = next && next.ipstart < target_ip ? target_ip - next.ipstart : 1000000000;
-      var prev_ip_diff = prev && prev.ipstart < target_ip ? target_ip - prev.ipstart : 1000000000;
+      var prev_ip_diff = prev && prev.ipstart <= target_ip ? target_ip - prev.ipstart : 1000000000;
 
       // current wins
       if(curr_ip_diff < next_ip_diff && curr_ip_diff < prev_ip_diff) {
