@@ -102,7 +102,9 @@ function find(ip) {
 
         for(var i=0; i<entries.length; i++) {
             var entry = entries[i].split(",");
-            countries.push({ipstart: parseInt(entry[2]), code: entry[4], name: entry[5]});
+            if (entry.length > 5) {
+                countries.push({ipstart: parseInt(entry[2]), code: entry[4], name: entry[5].trim()});
+            }
         }
 
         countries.sort(function(a, b) {
