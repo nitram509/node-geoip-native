@@ -61,7 +61,7 @@ function find(ip) {
 
         // we're either current, next or previous depending on which is closest to ipl
         var cd = Math.abs(ipl - current.ipstart);
-        var nd = next && next.ipstart< ipl ? ipl - next.ipstart : 1000000000;
+        var nd = next && next.ipstart < ipl ? ipl - next.ipstart : 1000000000;
         var pd = prev && prev.ipstart < ipl ? ipl - prev.ipstart : 1000000000;
 
         // current wins
@@ -72,7 +72,6 @@ function find(ip) {
          // next wins
         if(nd < cd && nd < pd) {
             return next;
-
         }
 
         // prev wins
@@ -111,14 +110,14 @@ function find(ip) {
             return a.ipstart - b.ipstart;
         });
 
-        var n = countries.length;
+        numcountries = countries.length;
+        var n = numcountries;
         while(n >= 1) {
             n = n >> 1;
             midpoints.push(n);
         }
 
-        numcountries = countries.length;
-		ready = true;
+		    ready = true;
     });
 
 }());
