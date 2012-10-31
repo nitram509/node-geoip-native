@@ -43,6 +43,14 @@ Node GeoIP Native provides methods for:
 ### What's missing
 Be neat to expand this to include cities.
 
+### Testing
+First, you have to install nodeunit (https://github.com/caolan/nodeunit)
+   $> npm install nodeunit
+
+Second, run the unit test:
+   $> ./node_modules/nodeunit/bin/nodeunit test/unit/lookupTest.js
+
+
 ### License
 Copyright [Playtomic Inc](https://playtomic.com), 2012.  Licensed under the MIT license.  Certain portions may come from 3rd parties and carry their own licensing terms and are referenced where applicable.
 
