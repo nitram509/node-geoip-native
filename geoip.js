@@ -111,9 +111,9 @@ function find(ip) {
             return a.ipstart - b.ipstart;
         });
 
-        var n = Math.floor(countries.length / 2);
+        var n = countries.length;
         while(n >= 1) {
-            n = Math.floor(n / 2);
+            n = n >> 1;
             midpoints.push(n);
         }
 
