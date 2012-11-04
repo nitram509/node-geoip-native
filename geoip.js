@@ -1,21 +1,16 @@
-var countries = [];
 var midpoints = [];
-var countriesLength = 0;
-var ready = false;
+var countryNamesAndCodes = require('./generated-namesandcodes.js').countryNamesAndCodes;
+var countries = require('./generated-countries.js').countries;
+var countriesLength = countries.length;
 
 module.exports = geoip = {
    lookup:function (ip) {
-      if (!ready) {
-         console.log("geoip warming up");
-         return {code:"N/A", name:"UNKNOWN"};
-      }
-
       return find(ip);
    }
 };
 
 /**
- * A qcuick little binary search
+ * A quick little binary search
  * @param ip the ip we're looking for
  * @return {*}
  */
@@ -66,58 +61,26 @@ function find(ip) {
 
       // current wins
       if (curr_ip_diff < next_ip_diff && curr_ip_diff < prev_ip_diff) {
-         return current;
+         return {ipstart:current.ipstart, name:countryNamesAndCodes[current.idx], code:countryNamesAndCodes[current.idx + 1]};
       }
 
       // next wins
       if (next_ip_diff < curr_ip_diff && next_ip_diff < prev_ip_diff) {
-         return next;
+         return {ipstart:next.ipstart, name:countryNamesAndCodes[next.idx], code:countryNamesAndCodes[next.idx + 1]};
       }
 
       // prev wins
-      return prev;
+      return {ipstart:prev.ipstart, name:countryNamesAndCodes[prev.idx], code:countryNamesAndCodes[prev.idx + 1]};
    }
 }
 
-/**
- * Prepare the data.  This uses the standard free GeoIP CSV database
- * from MaxMind, you should be able to update it at any time by just
- * overwriting GeoIPCountryWhois.csv with a new version.
+/*
+ prepare midpoints ....
  */
 (function () {
-
-   var fs = require("fs");
-   var sys = require("sys");
-   var stream = fs.createReadStream(__dirname + "/GeoIPCountryWhois.csv");
-   var buffer = "";
-
-   stream.addListener("data", function (data) {
-      buffer += data.toString().replace(/"/g, "");
-   });
-
-   stream.addListener("end", function () {
-
-      var entries = buffer.split("\n");
-
-      for (var i = 0; i < entries.length; i++) {
-         var entry = entries[i].split(",");
-         if (entry.length > 5) {
-            countries.push({ipstart:parseInt(entry[2]), code:entry[4], name:entry[5].trim()});
-         }
-      }
-
-      countries.sort(function (a, b) {
-         return a.ipstart - b.ipstart;
-      });
-
-      countriesLength = countries.length;
-      var n = countriesLength;
-      while (n >= 1) {
-         n = n >> 1;
-         midpoints.push(n);
-      }
-
-      ready = true;
-   });
-
-}());
+   var n = countriesLength;
+   while (n >= 1) {
+      n = n >> 1;
+      midpoints.push(n);
+   }
+})();
