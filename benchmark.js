@@ -1,5 +1,3 @@
-var geoip = require("./geoip.js"); // needed because of async data loading
-
 /*
  @param geoipLibrary: the library from which to use the lookup method
  */
@@ -35,17 +33,24 @@ function benchmark_IP_lookup(geoipLibrary) {
 }
 
 function run_all_benchmarks() {
+
    console.log("starting test: geoip-native");
-   geoip = require("./geoip.js");
+   var start = new Date().getTime();
+   var geoip = require("./geoip.js");
+   var finish = new Date().getTime();
+   console.log("loading geoip-native took " + (finish - start) + "ms");
    benchmark_IP_lookup(geoip);
 
+
    console.log("starting test: geoip-lite");
+   start = new Date().getTime();
    geoip = require("geoip-lite");
+   finish = new Date().getTime();
+   console.log("loading geoip-lite took " + (finish - start) + "ms");
    benchmark_IP_lookup(geoip);
 }
 
-// waiting 3 seconds to finish async loading of data
-setTimeout(run_all_benchmarks, 3000);
+run_all_benchmarks();
 
 /*
  benchmark results:
