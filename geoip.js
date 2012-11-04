@@ -1,6 +1,6 @@
 var countries = [];
 var midpoints = [];
-var numcountries = 0;
+var countriesLength = 0;
 var ready = false;
 
 module.exports = geoip = {
@@ -44,7 +44,7 @@ function find(ip) {
       nn = n + 1;
       pn = n - 1;
 
-      next = nn < numcountries ? countries[nn] : null;
+      next = nn < countriesLength ? countries[nn] : null;
       prev = pn > -1 ? countries[pn] : null;
 
       // take another step?
@@ -110,8 +110,8 @@ function find(ip) {
          return a.ipstart - b.ipstart;
       });
 
-      numcountries = countries.length;
-      var n = numcountries;
+      countriesLength = countries.length;
+      var n = countriesLength;
       while (n >= 1) {
          n = n >> 1;
          midpoints.push(n);
