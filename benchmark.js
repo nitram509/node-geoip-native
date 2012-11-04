@@ -1,53 +1,54 @@
-var geoip = require("./geoip.js");
-//var geoip = require("geoip-lite");
-
-var test1 = true;
-
-function test() {
-
-    var total = 0;
-    var numtests = 20;
-    var numiterations = 1000000;
-
-    console.log("starting test: " + (test1 ? "geoip-native" : "geoip-lite"));
-
-    for(var t=0; t<numtests; t++) {
-
-        var start = new Date().getTime();
-
-        for(var i=0; i<numiterations; i++) {
-
-            var o1 = 1 + Math.round(Math.random() * 254);
-            var o2 = 1 + Math.round(Math.random() * 254);
-            var o3 = 1 + Math.round(Math.random() * 254);
-            var o4 = 1 + Math.round(Math.random() * 254);
-            var ip = o1 + "." + o2 + "." + o3 + "." + o4;
-            geoip.lookup(ip);
-        }
-
-        var finish = new Date().getTime();
-
-        if(t > 4 && t < 15) {
-            total += (finish - start);
-            console.log("time " + (finish - start));
-        }
-    }
-
-    console.log("average: " + (total / 10));
-
-    if(!test1) {
-        return;
-    }
-
-    geoip = require("geoip-lite");
-    test1 = false;
-    test();
-}
-
-setTimeout(test, 3000);
+var geoip = require("./geoip.js"); // needed because of async data loading
 
 /*
-benchmark results:
+ @param geoipLibrary: the library from which to use the lookup method
+ */
+function benchmark_IP_lookup(geoipLibrary) {
+
+   var total = 0;
+   var numtests = 20;
+   var numiterations = 1000000;
+   console.log("----------------------------");
+   for (var t = 0; t < numtests; t++) {
+
+      var start = new Date().getTime();
+
+      for (var i = 0; i < numiterations; i++) {
+
+         var o1 = 1 + Math.round(Math.random() * 254);
+         var o2 = 1 + Math.round(Math.random() * 254);
+         var o3 = 1 + Math.round(Math.random() * 254);
+         var o4 = 1 + Math.round(Math.random() * 254);
+         var ip = o1 + "." + o2 + "." + o3 + "." + o4;
+         geoipLibrary.lookup(ip);
+      }
+
+      var finish = new Date().getTime();
+
+      if (t > 4 && t < 15) {
+         total += (finish - start);
+         console.log("time " + (finish - start));
+      }
+   }
+   console.log("average: " + (total / 10));
+   console.log("----------------------------");
+}
+
+function run_all_benchmarks() {
+   console.log("starting test: geoip-native");
+   geoip = require("./geoip.js");
+   benchmark_IP_lookup(geoip);
+
+   console.log("starting test: geoip-lite");
+   geoip = require("geoip-lite");
+   benchmark_IP_lookup(geoip);
+}
+
+// waiting 3 seconds to finish async loading of data
+setTimeout(run_all_benchmarks, 3000);
+
+/*
+ benchmark results:
 
  geoip-native
  time 1500
