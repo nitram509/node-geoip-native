@@ -12,11 +12,6 @@ module.exports = {
     callback();
   },
 
-  test_check_if_warmed_up:function (test) {
-    test.notEqual(this.geoip.lookup("127.0.0.1").code, "N/A", "No yet warmed up, please use more time for warmup");
-    test.done();
-  },
-
   test_ip_in_the_lower_range_and_leftmost_border:function (test) {
     var ip;
     var actual;
