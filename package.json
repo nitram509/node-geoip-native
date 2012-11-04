@@ -19,6 +19,9 @@
     "node": ">=0.6.0"
   },
   "main" :  "./index.js",
+  "scripts" : {
+    "build" : "./generate_sources.js"
+  },
   "licenses": [
     {
       "type": "MIT",
