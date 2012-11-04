@@ -44,7 +44,6 @@ function write_sourceFile_countryNamesAndCodes() {
       var countryName = countryNamesAndCodes[i<<1].replace("'", "\\'");
       var countryCode = countryNamesAndCodes[(i<<1)+1].replace("'", "\\'");
       data += "'" + countryName + "','"+countryCode+"',\n";
-      data += "'" + countryName + "','"+countryCode+"',\n";
    }
    data += "];\n";
    data += "module.exports = {\n";
