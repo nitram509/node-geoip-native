@@ -37,7 +37,7 @@ function find(ip) {
          idxMax = idxMiddle - 1;
       } else {
          // key found at index imid
-         return {ipstart:pickedCountry.ipstart, name:countryNamesAndCodes[pickedCountry.idx], code:countryNamesAndCodes[pickedCountry.idx + 1]};
+         break;
       }
    }
    // return previous found country.
