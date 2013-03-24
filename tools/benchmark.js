@@ -36,7 +36,7 @@ function run_all_benchmarks() {
 
    console.log("starting test: geoip-native");
    var start = new Date().getTime();
-   var geoip = require("./geoip.js");
+   var geoip = require("../geoip-native.js");
    var finish = new Date().getTime();
    console.log("loading geoip-native took " + (finish - start) + "ms");
    benchmark_IP_lookup(geoip);
