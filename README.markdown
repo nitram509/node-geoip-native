@@ -20,7 +20,8 @@ Benchmarks on my 2011 Macbook Air whilst running lots of software.  The test too
 ## How to use
 1. git clone https://github.com/benlowry/node-geoip-native
 2. cd node-geoip-native
-3. node benchmark.js
+3. npm install
+4. node benchmark.js
 
 or just ```npm install geoip-native```
 
@@ -41,10 +42,10 @@ Second, run the unit test:
 
 ## Examples
 
-	var geoip = require("geoip-native");
-	var ip = "123.123.123.123";
-	geoip.lookup(ip);
-	console.log("country: " + ip.name + " / " + ip.code);
+  var geoip = require("./geoip.js");
+  var ip = geoip.lookup("134.12.12.123");
+  console.log("numeric ip value: " + ip.ipstart);
+  console.log("country: " + ip.name + " / " + ip.code);
 
 	// in practice you'd want:
 	// ip = request.headers["x-forwarded-for"] || request.connection.remoteAddress,
