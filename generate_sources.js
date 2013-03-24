@@ -60,7 +60,7 @@ function write_sourceFile_countries() {
    data += "var countries = [\n";
    for (var i = 0, len = countries.length; i < len; i++) {
       var country = countries[i];
-      data += "{ipstart:" + country.ipstart + ",idx:" + country.index + "},//" + countryNamesAndCodes[country.index + 1] + "\n";
+      data += "{ip:" + country.ipstart + ",idx:" + country.index + "},//" + countryNamesAndCodes[country.index + 1] + "\n";
    }
    data += "];\n";
    data += "module.exports = {\n";
