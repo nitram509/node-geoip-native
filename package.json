@@ -11,6 +11,12 @@
   "author": {
     "name": "Playtomic Inc"
   },
+  "contributors": [
+    {
+      "name" : "Martin W. Kirst",
+      "url": "https://github.com/nitram509"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "http://github.com/benlowry/node-geoip-native.git"
@@ -20,7 +26,7 @@
   },
   "main" :  "./index.js",
   "scripts" : {
-    "build" : "./generate_sources.js"
+    "preinstall" : "node generate_sources.js"
   },
   "licenses": [
     {
