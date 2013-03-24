@@ -42,13 +42,10 @@ Second, run the unit test:
 
 ## Examples
 
-  var geoip = require("./geoip.js");
-  var ip = geoip.lookup("134.12.12.123");
-  console.log("numeric ip value: " + ip.ipstart);
-  console.log("country: " + ip.name + " / " + ip.code);
-
-	// in practice you'd want:
-	// ip = request.headers["x-forwarded-for"] || request.connection.remoteAddress,
+    var geoip = require("./geoip.js");
+    var ip = geoip.lookup("134.12.12.123");
+    console.log("numeric ip value: " + ip.ipstart);
+    console.log("country: " + ip.name + " / " + ip.code);
 
 ### What's missing
 Be neat to expand this to include cities.
