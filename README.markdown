@@ -17,13 +17,18 @@ Benchmarks on my 2011 Macbook Air whilst running lots of software.  The test too
 
 1. Comes with the [standard CSV database by MaxMind](http://www.maxmind.com/app/geolite) which may require updating.
 
-## How to use
+
+## Install
+
+Simple run
+
+    npm install geoip-native
+
+## Install from source
 1. git clone https://github.com/benlowry/node-geoip-native
 2. cd node-geoip-native
 3. npm install
 4. node benchmark.js
-
-or just ```npm install geoip-native```
 
 ## Methods
 
@@ -42,7 +47,7 @@ Second, run the unit test:
 
 ## Examples
 
-    var geoip = require("./geoip.js");
+    var geoip = require("geoip-native");
     var ip = geoip.lookup("134.12.12.123");
     console.log("numeric ip value: " + ip.ipstart);
     console.log("country: " + ip.name + " / " + ip.code);

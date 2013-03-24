@@ -4,7 +4,7 @@ var countriesLength = countries.length;
 
 module.exports = geoip = {
   lookup: function (ip) {
-    return find(ip);
+    return _lookup(ip);
   }
 };
 
@@ -13,7 +13,7 @@ module.exports = geoip = {
  * @return {*}
  * @see http://en.wikipedia.org/wiki/Binary_search_algorithm   (Iterative approach)
  */
-function find(ip) {
+function _lookup(ip) {
 
   var parts = ip.split(".");
   var target_ip = parseInt(parts[3], 10) +
@@ -44,5 +44,6 @@ function find(ip) {
   return {
     ipstart: pickedCountry.ip,
     name: countryNamesAndCodes[pickedCountry.idx],
-    code: countryNamesAndCodes[pickedCountry.idx + 1]};
+    code: countryNamesAndCodes[pickedCountry.idx + 1]
+  };
 }
