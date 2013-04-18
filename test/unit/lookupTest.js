@@ -2,7 +2,7 @@
 
 module.exports = {
   setUp:function (callback) {
-    this.geoip = require("../../geoip.js");
+    this.geoip = require("../../geoip-native.js");
     // wait until ready
     callback();
   },
