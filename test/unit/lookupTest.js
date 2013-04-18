@@ -82,5 +82,16 @@ module.exports = {
     test.equals(actual.code, "KH");
 
     test.done();
+  },
+
+  test_in_the_middle_of_two_ips:function (test) {
+    var ip;
+    var actual;
+    ip = "63.155.159.123";
+    actual = this.geoip.lookup(ip);
+    test.equals(actual.name, "United States");
+    test.equals(actual.code, "US");
+
+    test.done();
   }
 };

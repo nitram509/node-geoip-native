@@ -11,39 +11,64 @@ module.exports = geoip = {
 /**
  * @param ip the ip we're looking for
  * @return {*}
- * @see http://en.wikipedia.org/wiki/Binary_search_algorithm   (Iterative approach)
+ * @see http://en.wikipedia.org/wiki/Binary_search_algorithm   (Deferred detection of equality approach)
  */
 function _lookup(ip) {
 
   var parts = ip.split(".");
   var target_ip = parseInt(parts[3], 10) +
-      (parseInt(parts[2], 10) * 256) +
-      (parseInt(parts[1], 10) * 65536) +
-      (parseInt(parts[0], 10) * 16777216);
+     (parseInt(parts[2], 10) * 256) +
+     (parseInt(parts[1], 10) * 65536) +
+     (parseInt(parts[0], 10) * 16777216);
 
   var idxMin = 0;
   var idxMiddle = 0;
   var idxMax = countriesLength - 1;
-  var pickedCountry = undefined;
+
   while (idxMin < idxMax) {
     idxMiddle = (idxMax + idxMin) >> 1;
-    pickedCountry = countries[idxMiddle];
-    // determine which subarray to search
-    if (pickedCountry.ip < target_ip) {
-      // change min index to search upper subarray
+    if (!(idxMiddle < idxMax)) {
+      throw "assertion error: idxMiddle is not lower then idxMax"
+    }
+    if (countries[idxMiddle].ip < target_ip) {
       idxMin = idxMiddle + 1;
-    } else if (pickedCountry.ip > target_ip) {
-      // change max index to search lower subarray
-      idxMax = idxMiddle - 1;
     } else {
-      // key found at index imid
-      break;
+      idxMax = idxMiddle;
     }
   }
-  // return previous found country.
+
+  var pickedCountry = countries[idxMin];
+  if ((idxMax == idxMin) && (pickedCountry.ip == target_ip)) {
+    pickedCountry = countries[idxMin];
+    return {
+      ipstart: pickedCountry.ip,
+      name: countryNamesAndCodes[pickedCountry.idx],
+      code: countryNamesAndCodes[pickedCountry.idx + 1]
+    };
+  }
+
+  if ((idxMiddle > 0) && (countries[idxMiddle - 1].ip < target_ip) && (target_ip < countries[idxMiddle].ip)) {
+    pickedCountry = countries[idxMiddle - 1]
+    return {
+      ipstart: pickedCountry.ip,
+      name: countryNamesAndCodes[pickedCountry.idx],
+      code: countryNamesAndCodes[pickedCountry.idx + 1]
+    };
+  }
+
+  if ((idxMiddle < countriesLength - 2) && (countries[idxMiddle].ip < target_ip) && (target_ip < countries[idxMiddle + 1].ip)) {
+    pickedCountry = countries[idxMiddle]
+    return {
+      ipstart: pickedCountry.ip,
+      name: countryNamesAndCodes[pickedCountry.idx],
+      code: countryNamesAndCodes[pickedCountry.idx + 1]
+    };
+  }
+
   return {
-    ipstart: pickedCountry.ip,
-    name: countryNamesAndCodes[pickedCountry.idx],
-    code: countryNamesAndCodes[pickedCountry.idx + 1]
+    ipstart: -1,
+    name: "UNKNOWN",
+    code: "N/A"
   };
+
 }
