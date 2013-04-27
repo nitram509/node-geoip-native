@@ -2,14 +2,15 @@
 
 "use strict";
 
+prepare_Tests_from_data_provider();
+
 module.exports.setUp = function (callback) {
   this.geoip = require("../../geoip-native.js");
-
   callback();
 };
 
 module.exports.tearDown = function (callback) {
-  // clean up
+  this.geoip = null;
   callback();
 };
 
@@ -29,30 +30,34 @@ function createTestFunction(ipFrom, ipTo, int32From, int32To, countryName, count
   }
 }
 
-prepare_Tests_from_data_provider();
+function inMinimizedTestRange(maxLength, index) {
+  var testRanges_fromIndex_toIndex = [
+    [0, 99],
+    [maxLength / 2 - 50, maxLength / 2 + 50],
+    [maxLength - 100, maxLength - 1],
+  ];
+  var inRange = false;
+  for (var z = 0; z < testRanges_fromIndex_toIndex.length; z++) {
+    var testRange = testRanges_fromIndex_toIndex[z];
+    inRange |= (testRange[0] <= index && index <= testRange[1]);
+  }
+  return inRange;
+}
+
 function prepare_Tests_from_data_provider() {
 
   var records = load_CSV_file().split("\n");
 
-  var testRanges = [
-    [0, 99],
-    [records.length / 2 - 50, records.length / 2 + 50],
-    [records.length - 100, records.length - 1],
-  ];
 
   for (var i = 0; i < records.length; i++) {
-    var shouldContinue = false;
-    for (var z = 0; z < testRanges.length; z++) {
-      var testRange = testRanges[z];
-      shouldContinue |= (testRange[0] <= i && i <= testRange[1]);
-    }
-    if (!shouldContinue) continue;
-
     var record = records[i].toString().trim();
-    if (record.length < 1) {
-      continue;
-    }
     var dataParts = record.split(/,/);
+
+    // warning: testing the complete Range will take more than one minute !
+    var shouldContinue = inMinimizedTestRange(records.length, i);
+    var recordContainsComma = dataParts.length > 6;
+    if (!shouldContinue && !recordContainsComma) continue;
+    if (record.length < 1) continue;
 
     var ipFrom = dataParts[0].toString().replace(/"/g, "");
     var ipTo = dataParts[1].toString().replace(/"/g, "");
@@ -61,7 +66,7 @@ function prepare_Tests_from_data_provider() {
     var countryCode = dataParts[4].toString().replace(/"/g, "");
     var countryName = dataParts[5].toString().replace(/"/g, "");
 
-    var testMethodName = ("test_record_index_" + i + "_ipFrom_" + ipFrom + "_name_" + countryName);
+    var testMethodName = ("test: record index=" + i + " ipFrom=" + ipFrom + " name=" + countryName);
     module.exports[testMethodName] = createTestFunction(ipFrom, ipTo, int32From, int32To, countryName, countryCode);
   }
 }
