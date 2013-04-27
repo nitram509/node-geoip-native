@@ -20,11 +20,13 @@ function createTestFunction(ipFrom, ipTo, int32From, int32To, countryName, count
     test.equals(actual.name, countryName);
     test.equals(actual.code, countryCode);
     test.equals(actual.ipstart, int32From);
+    test.equals(actual.ipend, int32To);
 
     var actual = this.geoip.lookup(ipTo);
     test.equals(actual.name, countryName);
     test.equals(actual.code, countryCode);
     test.equals(actual.ipstart, int32From);
+    test.equals(actual.ipend, int32To);
 
     test.done();
   }
