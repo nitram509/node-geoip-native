@@ -9,7 +9,7 @@ function read_csv_file_and_prepare_data() {
     var fs = require("fs");
     var data = fs.readFileSync(__dirname + "/GeoIPCountryWhois.csv")
     var buffer = "";
-    buffer += data.toString().replace(/"/g, "");
+    buffer += data.toString();
     return buffer;
   }
 
@@ -17,11 +17,23 @@ function read_csv_file_and_prepare_data() {
   var offsetCounter = 0;
   var countrySet = {};
 
+  function extractPartsFromCsv(line) {
+    var matches = line.match(/("(?:[^"]|"")*"|[^,]*)/g);
+    var result = [];
+    for (var i = 0; i < matches.length; i++) {
+      var part = matches[i].replace(/"/g, "").trim();
+      if (part.length > 0) {
+        result.push(part);
+      }
+    }
+    return result;
+  }
+
   for (var i = 0; i < entries.length; i++) {
-    var entry = entries[i].split(",");
-    if (entry.length > 5) {
-      var countryName = entry[5].trim();
-      var countryCode = entry[4];
+    var parts = extractPartsFromCsv(entries[i]);
+    if (parts.length > 5) {
+      var countryName = parts[5].trim();
+      var countryCode = parts[4];
       var countryIndex = 0;
       if (!countrySet[countryName]) {
         countryIndex = offsetCounter++;
@@ -31,7 +43,7 @@ function read_csv_file_and_prepare_data() {
       } else {
         countryIndex = countrySet[countryName].index;
       }
-      countries.push({ipstart: parseInt(entry[2]), code: countryCode, name: countryName, index: (countryIndex * 2)});
+      countries.push({ipstart: parseInt(parts[2]), code: countryCode, name: countryName, index: (countryIndex * 2)});
     }
   }
 

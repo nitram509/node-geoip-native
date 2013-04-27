@@ -34,7 +34,7 @@ function inMinimizedTestRange(maxLength, index) {
   var testRanges_fromIndex_toIndex = [
     [0, 99],
     [maxLength / 2 - 50, maxLength / 2 + 50],
-    [maxLength - 100, maxLength - 1],
+    [maxLength - 100, maxLength - 1]
   ];
   var inRange = false;
   for (var z = 0; z < testRanges_fromIndex_toIndex.length; z++) {
@@ -51,7 +51,7 @@ function prepare_Tests_from_data_provider() {
 
   for (var i = 0; i < records.length; i++) {
     var record = records[i].toString().trim();
-    var dataParts = record.split(/,/);
+    var dataParts = extractPartsFromCsv(record);
 
     // warning: testing the complete Range will take more than one minute !
     var shouldContinue = inMinimizedTestRange(records.length, i);
@@ -109,6 +109,18 @@ function load_CSV_file() {
   var fs = require("fs");
   var data = fs.readFileSync(__dirname + "/../../GeoIPCountryWhois.csv")
   var buffer = "";
-  buffer += data.toString().replace(/"/g, "");
+  buffer += data.toString();
   return buffer;
+}
+
+function extractPartsFromCsv(line) {
+  var matches = line.match(/("(?:[^"]|"")*"|[^,]*)/g);
+  var result = [];
+  for (var i = 0; i < matches.length; i++) {
+    var part = matches[i].replace(/"/g, "").trim();
+    if (part.length > 0) {
+      result.push(part);
+    }
+  }
+  return result;
 }
