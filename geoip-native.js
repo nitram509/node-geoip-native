@@ -56,7 +56,7 @@ function _lookup(ip) {
     };
   }
 
-  if ((idxMiddle < countriesLength - 2) && (countries[idxMiddle].ip < target_ip) && (target_ip < countries[idxMiddle + 1].ip)) {
+  if ((idxMiddle < idxMax) && (countries[idxMiddle].ip < target_ip) && (target_ip < countries[idxMiddle + 1].ip)) {
     pickedCountry = countries[idxMiddle]
     return {
       ipstart: pickedCountry.ip,
