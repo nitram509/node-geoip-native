@@ -1,14 +1,19 @@
+"use strict";
+
 var countries = [];
 var countryNamesAndCodes = [];
 
 function read_csv_file_and_prepare_data() {
 
-  var fs = require("fs");
-  var data = fs.readFileSync(__dirname + "/GeoIPCountryWhois.csv")
-  var buffer = "";
-  buffer += data.toString().replace(/"/g, "");
+  function load_CSV_file() {
+    var fs = require("fs");
+    var data = fs.readFileSync(__dirname + "/GeoIPCountryWhois.csv")
+    var buffer = "";
+    buffer += data.toString().replace(/"/g, "");
+    return buffer;
+  }
 
-  var entries = buffer.split("\n");
+  var entries = load_CSV_file().split("\n");
   var offsetCounter = 0;
   var countrySet = {};
 

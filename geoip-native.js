@@ -40,35 +40,25 @@ function _lookup(ip) {
   var pickedCountry = countries[idxMin];
   if ((idxMax == idxMin) && (pickedCountry.ip == target_ip)) {
     pickedCountry = countries[idxMin];
-    return {
-      ipstart: pickedCountry.ip,
-      name: countryNamesAndCodes[pickedCountry.idx],
-      code: countryNamesAndCodes[pickedCountry.idx + 1]
-    };
+    return createCountry(pickedCountry.ip, countryNamesAndCodes[pickedCountry.idx], countryNamesAndCodes[pickedCountry.idx + 1]);
   }
 
   if ((idxMiddle > 0) && (countries[idxMiddle - 1].ip < target_ip) && (target_ip < countries[idxMiddle].ip)) {
     pickedCountry = countries[idxMiddle - 1]
-    return {
-      ipstart: pickedCountry.ip,
-      name: countryNamesAndCodes[pickedCountry.idx],
-      code: countryNamesAndCodes[pickedCountry.idx + 1]
-    };
+    return createCountry(pickedCountry.ip, countryNamesAndCodes[pickedCountry.idx], countryNamesAndCodes[pickedCountry.idx + 1]);
   }
 
   if ((idxMiddle < idxMax) && (countries[idxMiddle].ip < target_ip) && (target_ip < countries[idxMiddle + 1].ip)) {
     pickedCountry = countries[idxMiddle]
-    return {
-      ipstart: pickedCountry.ip,
-      name: countryNamesAndCodes[pickedCountry.idx],
-      code: countryNamesAndCodes[pickedCountry.idx + 1]
-    };
+    return createCountry(pickedCountry.ip, countryNamesAndCodes[pickedCountry.idx], countryNamesAndCodes[pickedCountry.idx + 1]);
   }
+  return createCountry(target_ip, "UNKNOWN", "N/A");
+}
 
+function createCountry(ipstart, countryName, countryCode) {
   return {
-    ipstart: -1,
-    name: "UNKNOWN",
-    code: "N/A"
+    ipstart: ipstart,
+    name: countryName,
+    code: countryCode
   };
-
 }
