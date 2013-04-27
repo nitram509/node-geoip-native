@@ -30,7 +30,7 @@ function _lookup(ip) {
     if (!(idxMiddle < idxMax)) {
       throw "assertion error: idxMiddle is not lower then idxMax"
     }
-    if (countries[idxMiddle].ip < target_ip) {
+    if (countries[idxMiddle].s < target_ip) {
       idxMin = idxMiddle + 1;
     } else {
       idxMax = idxMiddle;
@@ -38,26 +38,27 @@ function _lookup(ip) {
   }
 
   var pickedCountry = countries[idxMin];
-  if ((idxMax == idxMin) && (pickedCountry.ip == target_ip)) {
+  if ((idxMax == idxMin) && (pickedCountry.s == target_ip)) {
     pickedCountry = countries[idxMin];
-    return createCountry(pickedCountry.ip, countryNamesAndCodes[pickedCountry.idx], countryNamesAndCodes[pickedCountry.idx + 1]);
+    return createCountry(pickedCountry.s, pickedCountry.e, countryNamesAndCodes[pickedCountry.i], countryNamesAndCodes[pickedCountry.i + 1]);
   }
 
-  if ((idxMiddle > 0) && (countries[idxMiddle - 1].ip < target_ip) && (target_ip < countries[idxMiddle].ip)) {
+  if ((idxMiddle > 0) && (countries[idxMiddle - 1].s < target_ip) && (target_ip < countries[idxMiddle].s)) {
     pickedCountry = countries[idxMiddle - 1]
-    return createCountry(pickedCountry.ip, countryNamesAndCodes[pickedCountry.idx], countryNamesAndCodes[pickedCountry.idx + 1]);
+    return createCountry(pickedCountry.s, pickedCountry.e, countryNamesAndCodes[pickedCountry.i], countryNamesAndCodes[pickedCountry.i + 1]);
   }
 
-  if ((idxMiddle < idxMax) && (countries[idxMiddle].ip < target_ip) && (target_ip < countries[idxMiddle + 1].ip)) {
+  if ((idxMiddle < idxMax) && (countries[idxMiddle].s < target_ip) && (target_ip < countries[idxMiddle + 1].s)) {
     pickedCountry = countries[idxMiddle]
-    return createCountry(pickedCountry.ip, countryNamesAndCodes[pickedCountry.idx], countryNamesAndCodes[pickedCountry.idx + 1]);
+    return createCountry(pickedCountry.s, pickedCountry.e, countryNamesAndCodes[pickedCountry.i], countryNamesAndCodes[pickedCountry.i + 1]);
   }
-  return createCountry(target_ip, "UNKNOWN", "N/A");
+  return createCountry(target_ip, target_ip, "UNKNOWN", "N/A");
 }
 
-function createCountry(ipstart, countryName, countryCode) {
+function createCountry(ipstart, ipend, countryName, countryCode) {
   return {
     ipstart: ipstart,
+    ipend: ipend,
     name: countryName,
     code: countryCode
   };

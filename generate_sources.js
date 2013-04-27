@@ -13,10 +13,6 @@ function read_csv_file_and_prepare_data() {
     return buffer;
   }
 
-  var entries = load_CSV_file().split("\n");
-  var offsetCounter = 0;
-  var countrySet = {};
-
   function extractPartsFromCsv(line) {
     var matches = line.match(/("(?:[^"]|"")*"|[^,]*)/g);
     var result = [];
@@ -29,12 +25,17 @@ function read_csv_file_and_prepare_data() {
     return result;
   }
 
+  var entries = load_CSV_file().split("\n");
+  var offsetCounter = 0;
+  var countryIndex = 0;
+  var countrySet = {};
+  var lastIpRangeEnd = 0;
+
   for (var i = 0; i < entries.length; i++) {
     var parts = extractPartsFromCsv(entries[i]);
     if (parts.length > 5) {
       var countryName = parts[5].trim();
       var countryCode = parts[4];
-      var countryIndex = 0;
       if (!countrySet[countryName]) {
         countryIndex = offsetCounter++;
         countrySet[countryName] = {index: countryIndex};
@@ -43,15 +44,36 @@ function read_csv_file_and_prepare_data() {
       } else {
         countryIndex = countrySet[countryName].index;
       }
-      countries.push({ipstart: parseInt(parts[2]), code: countryCode, name: countryName, index: (countryIndex * 2)});
+      countries.push(createCountryInformation(parseInt(parts[2]), parseInt(parts[3]), countryCode, countryName, (countryIndex * 2)));
+      lastIpRangeEnd = parseInt(parts[3]);
     }
   }
+
+  // add a special country, which indicates the END
+  countryIndex = offsetCounter;
+  countrySet["UNKNOWN"] = {index: countryIndex};
+  countryNamesAndCodes.push("UNKNOWN");
+  countryNamesAndCodes.push("N/A");
+  countries.push(
+     createCountryInformation(lastIpRangeEnd + 1, lastIpRangeEnd + 1, "N/A", "UNKNOWN", countryIndex * 2)
+  );
 
   countries.sort(function (a, b) {
     return a.ipstart - b.ipstart;
   });
 
 }
+
+function createCountryInformation(ipStart, ipEnd, countryCode, countryName, index) {
+  return {
+    ipstart: ipStart,
+    ipend: ipEnd,
+    code: countryCode,
+    name: countryName,
+    index: index
+  };
+}
+
 
 function write_sourceFile_countryNamesAndCodes() {
   var data = "";
@@ -77,7 +99,10 @@ function write_sourceFile_countries() {
   data += "var countries = [\n";
   for (var i = 0, len = countries.length; i < len; i++) {
     var country = countries[i];
-    data += "{ip:" + country.ipstart + ",idx:" + country.index + "},//" + countryNamesAndCodes[country.index + 1] + "\n";
+    data += "{s:" + country.ipstart + ",";
+    data += "e:" + country.ipend + ",";
+    data += "i:" + country.index + "},";
+    data += "//" + countryNamesAndCodes[country.index + 1] + "\n";
   }
   data += "];\n";
   data += "module.exports = {\n";
