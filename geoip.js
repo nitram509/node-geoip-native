@@ -47,7 +47,7 @@ function find(ip) {
       }
    }
    // return previous found country.
-	return countries[idxMiddle-1];
+	return countries[idxMax];
 }
 
 /**
