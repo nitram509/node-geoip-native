@@ -31,10 +31,10 @@ function find(ip) {
    var idxMiddle = 0;
    var idxMax = numcountries - 1;
    var pickedCountry = undefined;
-   while (idxMin < idxMax) {
+   while (idxMin <= idxMax) {
       idxMiddle = (idxMax + idxMin) >> 1;
       pickedCountry = countries[idxMiddle];
-      // determine which subarray to search
+	  // determine which subarray to search
       if (pickedCountry.ipstart < target_ip) {
          // change min index to search upper subarray
          idxMin = idxMiddle + 1;
@@ -43,11 +43,11 @@ function find(ip) {
          idxMax = idxMiddle - 1;
       } else {
          // key found at index imid
-         return pickedCountry;
+		  return pickedCountry;
       }
    }
    // return previous found country.
-   return pickedCountry;
+	return countries[idxMax];
 }
 
 /**
@@ -58,7 +58,6 @@ function find(ip) {
 (function() {
 
     var fs = require("fs");
-    var sys = require("sys");
     var stream = fs.createReadStream(__dirname + "/GeoIPCountryWhois.csv");
     var buffer = "";
 
